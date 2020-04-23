@@ -16,6 +16,12 @@ object Utils {
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
-        TODO("not implemented")
+        var initials = ""
+        for (name in arrayOf(firstName?.trim(), lastName?.trim())) {
+            if(name != null && name.isNotEmpty()) {
+                initials += name.first().toString()
+            }
+        }
+        return if(initials.isNotEmpty()) initials else "null"
     }
 }
