@@ -1,6 +1,6 @@
 package ru.skillbranch.devintensive.extensions
 
-import java.lang.IllegalStateException
+import ru.skillbranch.devintensive.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -9,12 +9,12 @@ const val MINUTE = 60 * SECOND
 const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
-fun Date.format(pattern:String="HH:mm:ss dd.MM.yy"):String {
-    val dateFormat= SimpleDateFormat(pattern, Locale("ru"))
+fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
+    val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
     return dateFormat.format(this)
 }
 
-fun Date.add(value:Int, units: TimeUnits = TimeUnits.SECOND): Date{
+fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
     var time = this.time
 
     time += when (units) {
@@ -28,13 +28,23 @@ fun Date.add(value:Int, units: TimeUnits = TimeUnits.SECOND): Date{
     return this
 }
 
-fun Date.humanizeDiff(date:Date = Date()): String {
+fun Date.humanizeDiff(date: Date = Date()): String {
     TODO("not implemented")
 }
 
-enum class TimeUnits{
-    SECOND,
-    MINUTE,
-    HOUR,
-    DAY
+enum class TimeUnits {
+    SECOND {
+        override fun plural(value: Int): String = Utils.makePlural(value, "секунду", "секунды", "секунд")
+    },
+    MINUTE {
+        override fun plural(value: Int): String = Utils.makePlural(value, "минуту", "минуты", "минут")
+    },
+    HOUR {
+        override fun plural(value: Int): String = Utils.makePlural(value, "час", "часа", "часов")
+    },
+    DAY {
+        override fun plural(value: Int): String = Utils.makePlural(value, "день", "дня", "дней")
+    };
+
+    abstract fun plural(value: Int): String
 }

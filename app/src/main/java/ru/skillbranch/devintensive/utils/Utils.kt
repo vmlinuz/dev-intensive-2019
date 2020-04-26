@@ -102,4 +102,15 @@ object Utils {
         }
         return if (initials.isNotEmpty()) initials else "null"
     }
+
+    fun makePlural(count: Int, nominativeSingular: String, genitiveSingular: String, genitivePlural: String): String {
+        val lastTwoDigits = count % 100
+        val lastDigit = count % 10
+        val word = if (lastDigit in 5..9 || lastTwoDigits in 11..19 || lastDigit == 0 || lastDigit >= 5) genitivePlural
+        else if (lastDigit == 1) nominativeSingular
+        else if (lastDigit in 2..4) genitiveSingular
+        else throw IllegalArgumentException("incorrect input")
+
+        return "$count $word"
+    }
 }
