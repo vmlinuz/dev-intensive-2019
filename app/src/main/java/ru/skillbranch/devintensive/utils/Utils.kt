@@ -1,12 +1,15 @@
 package ru.skillbranch.devintensive.utils
 
 object Utils {
-    fun parseFullName(fullName: String?): Pair<String?, String?> {
-        // TODO FIX ME
-        val parts: List<String>? = fullName?.split(" ")
+    private fun getElementIfAvailable(collection: List<String>?, index: Int): String? {
+        return if (collection?.getOrNull(index) != null && collection[index].isNotEmpty()) collection[index] else null
+    }
 
-        val firstName = parts?.getOrNull(0)
-        val lastName = parts?.getOrNull(1)
+    fun parseFullName(fullName: String?): Pair<String?, String?> {
+        val parts: List<String>? = fullName?.trim()?.split(" ")
+
+        val firstName = getElementIfAvailable(parts, 0)
+        val lastName = getElementIfAvailable(parts, 1)
         // return Pair(firstName, lastName)
         return firstName to lastName
     }
@@ -97,7 +100,7 @@ object Utils {
         var initials = ""
         for (name in arrayOf(firstName?.trim(), lastName?.trim())) {
             if (name != null && name.isNotEmpty()) {
-                initials += name.first().toString()
+                initials += name.first().toString().toUpperCase()
             }
         }
         return if (initials.isNotEmpty()) initials else "null"
@@ -114,7 +117,7 @@ object Utils {
         return "$count $word"
     }
 
-    fun specifyTime(future: Boolean, timeString: String) : String {
+    fun specifyTime(future: Boolean, timeString: String): String {
         return "${if (future) "через $timeString" else "$timeString назад"}"
     }
 }
