@@ -113,4 +113,8 @@ object Utils {
 
         return "$count $word"
     }
+
+    fun specifyTime(future: Boolean, timeString: String) : String {
+        return "${if (future) "через $timeString" else "$timeString назад"}"
+    }
 }

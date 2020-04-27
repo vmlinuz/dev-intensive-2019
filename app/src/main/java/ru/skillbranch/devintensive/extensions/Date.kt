@@ -29,7 +29,23 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 }
 
 fun Date.humanizeDiff(date: Date = Date()): String {
-    TODO("not implemented")
+    var diff: Long = date.time - this.time
+    val future: Boolean = diff < 0
+    if (future) diff = -diff
+    val seconds = diff / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    val days = hours / 24
+    return if (seconds == 0L || seconds == 1L) "только что"
+        else if (seconds in 2..45) Utils.specifyTime(future, "несколько секунд")
+        else if (seconds in 46..75) Utils.specifyTime(future, "минуту")
+        else if (seconds > 75 && minutes < 45) Utils.specifyTime(future, TimeUnits.MINUTE.plural(minutes.toInt()))
+        else if (minutes in 46..75) Utils.specifyTime(future, "час")
+        else if (minutes > 75 && hours < 22) Utils.specifyTime(future, TimeUnits.HOUR.plural(hours.toInt()))
+        else if (hours in 22..26) Utils.specifyTime(future, "день")
+        else if (hours > 26 && days < 360) Utils.specifyTime(future, TimeUnits.DAY.plural(days.toInt()))
+        else if (days > 360) "${if (future) "более чем через год" else "более года назад"}"
+        else throw IllegalArgumentException("incorrect input")
 }
 
 enum class TimeUnits {
