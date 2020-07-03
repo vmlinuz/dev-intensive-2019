@@ -19,7 +19,7 @@ import ru.skillbranch.devintensive.models.Bender
 class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEditorActionListener {
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
-    lateinit var messagEt: EditText
+    lateinit var messageEt: EditText
     lateinit var sendBtn: ImageView
 
     lateinit var benderObj: Bender
@@ -34,10 +34,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
         //       benderImage = findViewById(R.id.iv_bender)
         benderImage = iv_bender
         textTxt = tv_text
-        messagEt = et_message
+        messageEt = et_message
         sendBtn = iv_send
 
-        messagEt.setOnEditorActionListener(this)
+        messageEt.setOnEditorActionListener(this)
 
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
@@ -109,8 +109,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
     }
 
     private fun send() {
-        val (phrase, color) = benderObj.listenAnswer(messagEt.text.toString())
-        messagEt.setText("")
+        val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString())
+        messageEt.setText("")
         val (r, g, b) = color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
         textTxt.text = phrase

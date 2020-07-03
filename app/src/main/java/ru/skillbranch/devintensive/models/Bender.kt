@@ -19,6 +19,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         val ret = question.validateAnswer(answer)
         return if (ret.isNotEmpty()) {
             "${ret}\n${question.question}" to status.color
+        } else if (question == Question.IDLE) {
+            question.question to status.color
         } else if (question.answers.contains(answer)) {
             question = question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
@@ -35,8 +37,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
     enum class Status(val color: Triple<Int, Int, Int>) {
         NORMAL(Triple(255, 255, 255)),
-        DANGER(Triple(255, 120, 0)),
-        WARNING(Triple(255, 60, 60)),
+        WARNING(Triple(255, 120, 0)),
+        DANGER(Triple(255, 60, 60)),
         CRITICAL(Triple(255, 0, 0));
 
         fun nextStatus(): Status {
@@ -53,20 +55,20 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             override fun nextQuestion(): Question = PROFESSION
             override fun validateAnswer(answer: String): String {
                 Log.d("M_Bender", "$answer : ${answer.matches("[A-Z].*".toRegex())}")
-                return if (!answer.matches("[A-Z].*".toRegex())) {
-                    "Имя должно начинаться с заглавной буквы"
-                } else {
+                return if (answer.isNotEmpty() && answer[0].isUpperCase()) {
                     ""
+                } else {
+                    "Имя должно начинаться с заглавной буквы"
                 }
             }
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion(): Question = MATERIAL
             override fun validateAnswer(answer: String): String {
-                return if (answer.matches("[A-Z].*".toRegex())) {
-                    "Профессия должна начинаться со строчной буквы"
-                } else {
+                return if (answer.isNotEmpty() && answer[0].isLowerCase()) {
                     ""
+                } else {
+                    "Профессия должна начинаться со строчной буквы"
                 }
             }
         },
