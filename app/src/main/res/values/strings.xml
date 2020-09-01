@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Chat Dev-intensive</string>
+    <string name="profile_label_rating">Rating</string>
+    <string name="profile_label_respect">Respect</string>
+    <string name="profile_hint_repository">Repository</string>
+    <string name="profile_hint_about">About self</string>
+    <string name="profile_hint_last_name">Lastname</string>
+    <string name="profile_hint_first_name">Name</string>
 </resources>
