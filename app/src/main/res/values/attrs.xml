@@ -8,4 +8,40 @@
     <attr name="colorDivider" format="reference" />
     <attr name="colorIcon" format="reference" />
 
+    <declare-styleable name="CircularImageView">
+        <!-- BORDER -->
+        <attr name="cv_border" format="boolean" />
+        <attr name="cv_borderWidth" format="dimension" />
+        <attr name="cv_borderColor" format="color" />
+        <attr name="cv_borderColorStart" format="color" />
+        <attr name="cv_borderColorEnd" format="color" />
+        <attr name="cv_borderColorDirection">
+            <flag name="LEFT_TO_RIGHT" value="1" />
+            <flag name="RIGHT_TO_LEFT" value="2" />
+            <flag name="TOP_TO_BOTTOM" value="3" />
+            <flag name="BOTTOM_TO_TOP" value="4" />
+        </attr>
+        <!-- CIRCLE COLOR -->
+        <attr name="cv_circleColor" format="color" />
+        <attr name="cv_circleColorStart" format="color" />
+        <attr name="cv_circleColorEnd" format="color" />
+        <attr name="civ_circleColorDirection">
+            <flag name="LEFT_TO_RIGHT" value="1" />
+            <flag name="RIGHT_TO_LEFT" value="2" />
+            <flag name="TOP_TO_BOTTOM" value="3" />
+            <flag name="BOTTOM_TO_TOP" value="4" />
+        </attr>
+        <!-- SHADOW -->
+        <attr name="cv_shadow" format="boolean" />
+        <attr name="cv_shadowColor" format="color" />
+        <attr name="cv_shadowRadius" format="dimension" />
+        <attr name="cv_shadowGravity">
+            <flag name="CENTER" value="1" />
+            <flag name="TOP" value="2" />
+            <flag name="BOTTOM" value="3" />
+            <flag name="START" value="4" />
+            <flag name="END" value="5" />
+        </attr>
+    </declare-styleable>
+
 </resources>
