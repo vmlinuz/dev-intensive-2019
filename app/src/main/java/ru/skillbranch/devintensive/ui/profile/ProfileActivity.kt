@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.ui.profile
 
+import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -8,15 +9,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 @androidx.annotation.RequiresApi(Build.VERSION_CODES.CUPCAKE)
@@ -98,7 +102,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun updateTheme(mode: Int) {
         Log.d("M_ProfileActivity", "updateTheme")
-        delegate.setLocalNightMode(mode)
+        delegate.localNightMode = mode
     }
 
     private fun updateUI(profile: Profile) {
@@ -107,6 +111,12 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+
+        val typedValue = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
+        val color = ContextCompat.getColor(this, typedValue.resourceId)
+
+        iv_avatar.setImageDrawable(Utils.textAsDrawable(Utils.toInitials(profile.firstName, profile.lastName), textColor = Color.WHITE, backgroundColor = color))
     }
 
     private fun initViews(savedInstanceState: Bundle?) {

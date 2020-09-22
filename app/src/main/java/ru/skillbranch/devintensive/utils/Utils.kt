@@ -1,5 +1,13 @@
 package ru.skillbranch.devintensive.utils
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+
+
 object Utils {
     private fun getElementIfAvailable(collection: List<String>?, index: Int): String? {
         return if (collection?.getOrNull(index) != null && collection[index].isNotEmpty()) collection[index] else null
@@ -84,11 +92,11 @@ object Utils {
             'ю' to "yu",
             'я' to "ya"
         )
-        var result: String = ""
+        var result  = ""
 
         for (char in payload) {
             if (dictionary.containsKey(char)) {
-                result += dictionary[char];
+                result += dictionary[char]
             } else {
                 result += char
             }
@@ -119,5 +127,23 @@ object Utils {
 
     fun specifyTime(future: Boolean, timeString: String): String {
         return "${if (future) "через $timeString" else "$timeString назад"}"
+    }
+
+    fun textAsDrawable(text: String?, textSize: Float = 1000F, textColor: Int = Color.WHITE, backgroundColor: Int = Color.BLACK): Drawable {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.isAntiAlias = true
+        paint.textSize = textSize
+        paint.color = textColor
+        paint.textAlign = Paint.Align.LEFT
+        val baseline: Float = -paint.ascent() // ascent() is negative
+        val width = (paint.measureText(text) + 400).toInt() // round
+        val height = (baseline + paint.descent() + 400).toInt()
+        val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(image)
+        canvas.drawColor(backgroundColor)
+        if (text != null) {
+            canvas.drawText(text, 200F, baseline + 200F, paint)
+        }
+        return BitmapDrawable(image)
     }
 }
