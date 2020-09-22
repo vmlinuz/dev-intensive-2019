@@ -84,7 +84,7 @@
                       android:paddingBottom="@dimen/spacing_normal_16">
 
             <TextView style="@style/Profile.Metrics.Value"
-                      android:id="@+id/tv_rating_value"
+                      android:id="@+id/tv_rating"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:textColor="@android:color/white"

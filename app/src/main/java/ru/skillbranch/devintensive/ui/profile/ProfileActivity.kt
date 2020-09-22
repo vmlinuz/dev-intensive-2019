@@ -102,7 +102,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun updateTheme(mode: Int) {
         Log.d("M_ProfileActivity", "updateTheme")
-        delegate.localNightMode = mode
+        delegate.setLocalNightMode(mode)
     }
 
     private fun updateUI(profile: Profile) {
@@ -127,7 +127,7 @@ class ProfileActivity : AppCompatActivity() {
             "lastName" to et_last_name,
             "about" to et_about,
             "repository" to et_repository,
-            "rating" to tv_rating_value,
+            "rating" to tv_rating,
             "respect" to tv_respect
         )
 

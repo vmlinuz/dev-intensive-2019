@@ -67,12 +67,8 @@ class CircleImageView @JvmOverloads constructor(
             field = value
             update()
         }
-    var borderColor: Int = Color.WHITE
-        set(value) {
-            field = value
-            manageBorderColor()
-            invalidate()
-        }
+    private var borderColor: Int = Color.WHITE
+
     var borderColorStart: Int? = null
         set(value) {
             field = value
@@ -201,6 +197,16 @@ class CircleImageView @JvmOverloads constructor(
 
     fun setBorderWidth(@Dimension dp: Int) {
         borderWidth = dp.toFloat()
+    }
+
+    fun getBorderColor(): Int {
+        return borderColor
+    }
+
+    fun setBorderColor(@ColorRes colorId: Int) {
+        borderColor = colorId
+        manageBorderColor()
+        invalidate()
     }
 
     fun setBorderColor(hex: String) {
