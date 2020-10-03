@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -33,21 +34,21 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var viewModel: ProfileViewModel
     var isEditMode = false
     lateinit var viewFields: Map<String, TextView>
-    val allowedRepositoryPrefixes = arrayOf("https://", "www.", "https://www.").map { s -> s + "github.com/" }
+    val allowedRepositoryPrefixes = arrayOf("https://", "www.", "https://www.", "").map { s -> s + "github.com/" }
     val forbiddenRepositorySuffixes = arrayOf(
-        "enterprise",
-        "features",
-        "topics",
-        "collections",
-        "trending",
-        "events",
-        "marketplace",
-        "pricing",
-        "nonprofit",
-        "customer-stories",
-        "security",
-        "login",
-        "join"
+        "/enterprise",
+        "/features",
+        "/topics",
+        "/collections",
+        "/trending",
+        "/events",
+        "/marketplace",
+        "/pricing",
+        "/nonprofit",
+        "/customer-stories",
+        "/security",
+        "/login",
+        "/join"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,13 +79,22 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun validateRepository(input: String?) {
         if (input.isNullOrEmpty()
-            || allowedRepositoryPrefixes.any { input.startsWith(it) }
-            && forbiddenRepositorySuffixes.none {
-                input.endsWith(
-                    it
+        || (
+                allowedRepositoryPrefixes.any { input.startsWith(it) }
+            && forbiddenRepositorySuffixes.none { input.endsWith(it) }
+            && input.split("github.com/")[1].isNotEmpty()
+            && input.split("github.com/")[1].none { it.isWhitespace() }
+            && (
+                    input.split("github.com/").size == 2
+                && (
+                        input.split("github.com/")[1].split("/").size == 1
+                    || (
+                            input.split("github.com/")[1].split("/").size == 2
+                         && input.split("github.com/")[1].split("/")[1].isNullOrEmpty()
+                        )
+                    )
                 )
-            }
-            && !input.split("github.com/")[1].contains('/')
+           )
         ) {
             wr_repository.error = null
             wr_repository.isErrorEnabled = false
