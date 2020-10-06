@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.VectorDrawable
 import android.os.Build
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.ImageView.ScaleType.*
@@ -25,7 +26,7 @@ class CircleImageView @JvmOverloads constructor(
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val DEFAULT_BORDER_WIDTH = 4f
+        private const val DEFAULT_BORDER_WIDTH = 2f
         private const val DEFAULT_SHADOW_RADIUS = 8.0f
     }
 
@@ -62,11 +63,18 @@ class CircleImageView @JvmOverloads constructor(
             manageCircleColor()
             invalidate()
         }
-    var borderWidth: Float = 0f
+
+    private var _borderWidth: Float = 0f
+
+    var borderWidth: Float
         set(value) {
-            field = value
+            val scale = resources.displayMetrics.scaledDensity;
+            val size = value / scale
+            _borderWidth = size
             update()
         }
+        get() = _borderWidth
+
     private var borderColor: Int = Color.WHITE
 
     var borderColorStart: Int? = null
@@ -136,54 +144,54 @@ class CircleImageView @JvmOverloads constructor(
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
         // Load the styled attributes and set their properties
         val attributes =
-            context.obtainStyledAttributes(attrs, R.styleable.CircularImageView, defStyleAttr, 0)
+            context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, 0)
 
         // Init Background Color
         circleColor =
-            attributes.getColor(R.styleable.CircularImageView_cv_circleColor, Color.WHITE)
-        attributes.getColor(R.styleable.CircularImageView_cv_circleColorStart, 0)
+            attributes.getColor(R.styleable.CircleImageView_cv_circleColor, Color.WHITE)
+        attributes.getColor(R.styleable.CircleImageView_cv_circleColorStart, 0)
             .also { if (it != 0) circleColorStart = it }
-        attributes.getColor(R.styleable.CircularImageView_cv_circleColorEnd, 0)
+        attributes.getColor(R.styleable.CircleImageView_cv_circleColorEnd, 0)
             .also { if (it != 0) circleColorEnd = it }
         circleColorDirection = attributes.getInteger(
-            R.styleable.CircularImageView_civ_circleColorDirection,
+            R.styleable.CircleImageView_civ_circleColorDirection,
             circleColorDirection.value
         ).toGradientDirection()
 
         // Init Border
-        if (attributes.getBoolean(R.styleable.CircularImageView_cv_border, true)) {
-            val defaultBorderWidth =
-                DEFAULT_BORDER_WIDTH * resources.displayMetrics.density
+        if (attributes.getBoolean(R.styleable.CircleImageView_cv_border, true)) {
+            val defaultBorderWidth = DEFAULT_BORDER_WIDTH
+
             borderWidth = attributes.getDimension(
-                R.styleable.CircularImageView_cv_borderWidth,
+                R.styleable.CircleImageView_cv_borderWidth,
                 defaultBorderWidth
             )
             borderColor =
-                attributes.getColor(R.styleable.CircularImageView_cv_borderColor, Color.WHITE)
-            attributes.getColor(R.styleable.CircularImageView_cv_borderColorStart, 0)
+                attributes.getColor(R.styleable.CircleImageView_cv_borderColor, Color.WHITE)
+            attributes.getColor(R.styleable.CircleImageView_cv_borderColorStart, 0)
                 .also { if (it != 0) borderColorStart = it }
-            attributes.getColor(R.styleable.CircularImageView_cv_borderColorEnd, 0)
+            attributes.getColor(R.styleable.CircleImageView_cv_borderColorEnd, 0)
                 .also { if (it != 0) borderColorEnd = it }
             borderColorDirection = attributes.getInteger(
-                R.styleable.CircularImageView_cv_borderColorDirection,
+                R.styleable.CircleImageView_cv_borderColorDirection,
                 borderColorDirection.value
             ).toGradientDirection()
         }
 
         // Init Shadow
-        shadowEnable = attributes.getBoolean(R.styleable.CircularImageView_cv_shadow, shadowEnable)
+        shadowEnable = attributes.getBoolean(R.styleable.CircleImageView_cv_shadow, shadowEnable)
         if (shadowEnable) {
             shadowGravity = attributes.getInteger(
-                R.styleable.CircularImageView_cv_shadowGravity,
+                R.styleable.CircleImageView_cv_shadowGravity,
                 shadowGravity.value
             ).toShadowGravity()
             val defaultShadowRadius = DEFAULT_SHADOW_RADIUS * resources.displayMetrics.density
             shadowRadius = attributes.getDimension(
-                R.styleable.CircularImageView_cv_shadowRadius,
+                R.styleable.CircleImageView_cv_shadowRadius,
                 defaultShadowRadius
             )
             shadowColor =
-                attributes.getColor(R.styleable.CircularImageView_cv_shadowColor, shadowColor)
+                attributes.getColor(R.styleable.CircleImageView_cv_shadowColor, shadowColor)
         }
 
         attributes.recycle()
@@ -192,11 +200,11 @@ class CircleImageView @JvmOverloads constructor(
 
     @Dimension
     fun getBorderWidth(): Int {
-        return borderWidth.roundToInt()
+        return _borderWidth.toInt()
     }
 
     fun setBorderWidth(@Dimension dp: Int) {
-        borderWidth = dp.toFloat()
+        _borderWidth = dp.toFloat()
     }
 
     fun getBorderColor(): Int {
@@ -243,7 +251,7 @@ class CircleImageView @JvmOverloads constructor(
         // Check if civImage isn't null
         if (civImage == null) return
 
-        val circleCenterWithBorder = circleCenter + borderWidth
+        val circleCenterWithBorder = circleCenter + _borderWidth
         val margeWithShadowRadius = if (shadowEnable) shadowRadius * 2 else 0f
 
         // Draw Shadow
@@ -270,7 +278,7 @@ class CircleImageView @JvmOverloads constructor(
             circleCenter - margeWithShadowRadius,
             paintBackground
         )
-        // Draw CircularImageView
+        // Draw CircleImageView
         canvas.drawCircle(
             circleCenterWithBorder,
             circleCenterWithBorder,
@@ -288,7 +296,7 @@ class CircleImageView @JvmOverloads constructor(
 
         heightCircle = min(usableWidth, usableHeight)
 
-        circleCenter = (heightCircle - borderWidth * 2).toInt() / 2
+        circleCenter = (heightCircle - _borderWidth * 2).toInt() / 2
         manageCircleColor()
         manageBorderColor()
 
@@ -304,7 +312,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     private fun manageBorderColor() {
-        val borderColor = if (borderWidth == 0f) circleColor else this.borderColor
+        val borderColor = if (_borderWidth == 0f) circleColor else this.borderColor
         paintBorder.shader = createLinearGradient(
             borderColorStart ?: borderColor,
             borderColorEnd ?: borderColor, borderColorDirection
